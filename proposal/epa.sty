@@ -1,0 +1,150 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{epa}[2026/01/01 v1.3 EPA Journal/Conference Paper Style]
+
+
+%%%%%%%%%%%%% General Document Control %%%%%%%%%%%%%%%%
+\RequirePackage{comment}  % for block comments
+\RequirePackage{xcolor}
+
+% --- Line numbers support (activation happens in .tex) ---
+\RequirePackage{lineno}
+\pagewiselinenumbers
+\renewcommand\linenumberfont{\normalfont\small} % optional
+
+
+%%%%%%%%%%%%% figures and tables and captions %%%%%%%%%%%%%%%%
+% Figures / tables
+\RequirePackage{graphicx}
+
+% Captions (no custom colors -> fewer conflicts)
+\RequirePackage[
+  margin=10pt,
+  font=small,
+  labelfont=bf,
+  labelsep=colon,
+  justification=raggedright,
+  singlelinecheck=false,
+  format=plain
+]{caption}
+
+\RequirePackage{pdflscape}  % landscape pages when needed
+
+
+
+\RequirePackage{booktabs} % nice tables
+\RequirePackage{longtable} % also nice tables 
+\RequirePackage{array} % allows you to center text in a table with columns of defined width
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}  
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{microtype} % optional but recommended
+
+%%%%%%%%%%%%% spacing %%%%%%%%%%%%%
+\setlength{\parskip}{.75ex plus 0.25ex minus 0.25ex} % slight space b/w paragraphs
+\setlength{\parindent}{0em} % smaller indent of paragraphs
+
+\setlength{\columnsep}{0.5in}
+
+%%%%%%%%%%%%% symbols %%%%%%%%%%%%%
+\RequirePackage{mathtools} % symbols
+\RequirePackage{textcomp} % some control quote sequences and other symbols
+
+%%%%%%%%%%%%% section / subsection titles (safe) %%%%%%%%%%%%%%%%
+\makeatletter
+\@ifpackageloaded{titlesec}{}{%
+  \RequirePackage{titlesec}%
+}
+\makeatother
+
+% No custom colors -> avoids undefined Highlight errors
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\small\bfseries}
+  {\thesubsubsection}{1em}{}
+
+\titlespacing*\section{0pt}{*1}{*.5}
+\titlespacing*\subsection{0pt}{*1}{*.5}
+\titlespacing*\subsubsection{0pt}{*1}{*.5}
+\setcounter{secnumdepth}{2} 
+
+%%%%%%%%%%%%% title / abstract %%%%%%%%%%%%%
+% ---------- Full-width centered title + authors in a two-column paper ----------
+\makeatletter
+\renewcommand{\maketitle}{%
+  \twocolumn[{%
+    \begin{center}
+      {\LARGE\bfseries \@title \par}
+      \vspace{1em}
+      \begin{minipage}{\textwidth}
+        \centering
+        \@author
+      \end{minipage}
+      \vspace{1.0em}
+    \end{center}
+  }]%
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% bibliography %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage[numbers,super,sort&compress]{natbib}
+\setlength{\bibsep}{0pt plus 0.2ex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%SUPPLEMENTARY MATERIAL %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Re-indexes figures and equations to start with "S"
+%%%% Prefix figure/table/equation numbers with "S" and reset counters
+\makeatletter
+\newcommand{\beginsupplement}{%
+  \setcounter{figure}{0}%
+  \renewcommand{\thefigure}{S\arabic{figure}}%
+
+  \setcounter{table}{0}%
+  \renewcommand{\thetable}{S\arabic{table}}%
+
+  \setcounter{equation}{0}%
+  \renewcommand{\theequation}{S\arabic{equation}}%
+
+  % If hyperref is loaded, avoid duplicate PDF anchors
+  \@ifpackageloaded{hyperref}{%
+    \renewcommand{\theHfigure}{S\arabic{figure}}%
+    \renewcommand{\theHtable}{S\arabic{table}}%
+    \renewcommand{\theHequation}{S\arabic{equation}}%
+  }{}%
+}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% EPA Keywords %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Place immediately after the abstract.
+%
+% Usage (authors type separators manually, e.g., semicolons):
+% \begin{EPAKeywords}
+% precision agriculture; remote sensing; yield prediction; deep learning
+% \end{EPAKeywords}
+%
+% Customize the label (default: "Keywords"):
+% \renewcommand{\EPAKeywordsname}{Index Terms}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecommand{\EPAKeywordsname}{Keywords}
+
+\newenvironment{EPAKeywords}{%
+  \par\addvspace{.5\baselineskip}%
+  \noindent\small\normalfont\raggedright\textbf{\EPAKeywordsname: }\ignorespaces%
+}{%
+  \par\addvspace{.25\baselineskip}%
+}
+
